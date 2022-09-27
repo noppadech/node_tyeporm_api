@@ -34,7 +34,8 @@ AppDataSource.initialize()
     app.use('/api/static', express.static(path.join(__dirname, '../public')));
 
     // 1. Body parser
-    app.use(express.json({ limit: '10kb' }));
+    app.use(express.json({ limit: '100kb' }));
+    app.use(express.urlencoded({ limit: '100kb', extended: true }));
 
     // 2. Logger
     if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
