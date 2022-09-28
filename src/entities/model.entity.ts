@@ -15,17 +15,17 @@ export default abstract class Model extends BaseEntity {
   created_at: Date;
 
   @Column()
-  user_created: string;
+  user_create: string;
 
   @UpdateDateColumn()
   updated_at: Date;
 
   @Column()
-  user_updated: string;
+  user_update: string;
 
   @DeleteDateColumn()
   deleted_at: Date;
 
   @Column()
-  user_deleted: string;
+  user_delete: string;
 }
