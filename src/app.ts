@@ -13,6 +13,11 @@ import postRouter from './routes/post.routes';
 import validateEnv from './utils/validateEnv';
 import redisClient from './utils/connectRedis';
 
+import cluster from 'cluster';
+import os from 'os';
+
+const numCpus = os.cpus().length;
+
 // import nodemailer from 'nodemailer';
 // (async function () {
 //   const credentials = await nodemailer.createTestAccount();
@@ -85,8 +90,19 @@ AppDataSource.initialize()
     );
 
     const port = config.get<number>('port');
-    app.listen(port);
+    if (cluster.isPrimary) {
+      for (let i = 0; i < numCpus; i++) {
+        cluster.fork();
+      }
 
-    console.log(`Server started on port: ${port}`);
+      cluster.on('exit', (worker, code, signal) => {
+        console.log(`Worker pid: ${worker.process.pid} died`);
+        cluster.fork();
+      });
+    } else {
+      app.listen(port);
+      console.log(`Server started with pid: ${process.pid} on port: ${port}`);
+    }
+    // 
   })
   .catch((error) => console.log(error));
