@@ -14,9 +14,10 @@ import postRouter from './routes/post.routes';
 import validateEnv from './utils/validateEnv';
 import redisClient from './utils/connectRedis';
 
+import { corsOptions } from './utils/corsOptions';
+
 import cluster from 'cluster';
 import os from 'os';
-
 
 const numCpus = os.cpus().length;
 
@@ -51,12 +52,12 @@ AppDataSource.initialize()
     app.use(cookieParser());
 
     // 4. Cors
-    app.use(
-      cors({
-        origin: config.get<string>('origin'),
-        credentials: true,
-      })
-    );
+    app.use(cors(corsOptions));
+      // cors({
+      //   origin: config.get<string>('origin'),
+      //   credentials: true,
+      // })
+      // );
 
     // ROUTES
     app.use('/api/system', systemRouter);
@@ -67,7 +68,6 @@ AppDataSource.initialize()
     // HEALTH CHECKER
     app.get('/api/healthChecker', async (_, res: Response) => {
       const message = await redisClient.get('try');
-
       res.status(200).json({
         status: 'success',
         message,
