@@ -14,9 +14,9 @@ const postgresConfig = config.get<{
 export const AppDataSource = new DataSource({
   ...postgresConfig,
   type: 'postgres',
-  synchronize: false,
-  logging: false,
-  entities: [`${__dirname}/entities/**/*.entity{.ts,.js}`],
-  migrations: [`${__dirname}/migrations/**/*{.ts,.js}`],
-  subscribers: [`${__dirname}/subscribers/**/*{.ts,.js}`],
+  synchronize: true,
+  logging: true,
+  entities: ['src/entities/**/*.entity{.ts,.js}'], 
+  migrations: ['src/migrations/**/*{.ts,.js}'],
+  subscribers: ['src/subscribers/**/*{.ts,.js}'],
 });
